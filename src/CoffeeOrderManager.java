@@ -12,7 +12,7 @@ import java.util.Scanner;
  *         Grading TA: Anand Aiyer
  */
 public class CoffeeOrderManager {
-    public static void main(String[] args) throws EndOfListException {
+    public static void main(String[] args)  {
         //Declaration of variables
         Scanner input = new Scanner(System.in);
         String choice, drink, specialInstruction;
@@ -27,16 +27,16 @@ public class CoffeeOrderManager {
         //Order object
         Order clipboard = null;
 
-        //Menu
-        System.out.println("Menu:");
-        System.out.println("\tO) Order");
-        System.out.println("\tP) Print Order Lists");
-        System.out.println("\tE) Extra Credit Functions");
-        System.out.println("\tC) Cursor Options");
-        System.out.println("\tQ) Quit");
-        System.out.println();
 
         do {
+            //Menu
+            System.out.println("Menu:");
+            System.out.println("\tO) Order");
+            System.out.println("\tP) Print Order Lists");
+            System.out.println("\tE) Extra Credit Functions");
+            System.out.println("\tC) Cursor Options");
+            System.out.println("\tQ) Quit");
+            System.out.println();
             System.out.print("\nPlease select an option: ");
             choice = input.nextLine();
 
@@ -106,7 +106,7 @@ public class CoffeeOrderManager {
                     break;
 
                 case "E":
-                    System.out.println("\nOptions: Reverse - R or Merge - M: ");
+                    System.out.print("\nOptions: Reverse - R or Merge - M: ");
                     choice=input.nextLine();
                     server=getInputInt("\nPlease select a list (1 or 2): ",1,2);
 
@@ -118,10 +118,19 @@ public class CoffeeOrderManager {
                                 System.out.println(e);
                             }
                             break;
-
+                        /*
                         case "M":
                             //Merge method
-                            break;
+                            try {
+                                System.out.println("hey");
+                               barista[server - 1] =  barista[server - 1].mergeList(barista[1]);
+                               //barista1 = barista1.mergeList(barista2);
+                            } catch (EndOfListException e) {
+                                System.out.println(e);
+                            }
+                            break;*/
+                        default:
+                            System.out.println("Invalid input, please try again later.");
                     }
                     break;
 
@@ -194,7 +203,7 @@ public class CoffeeOrderManager {
                     System.out.println("Invalid input please try again");
             }
 
-        } while (!choice.equals("Q"));
+        } while (!choice.toUpperCase().equals("Q"));
 
         System.out.println("Thanks for using this program!");
     }

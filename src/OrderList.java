@@ -1,3 +1,5 @@
+import java.awt.*;
+
 /**
  * The code for OrderListNode manages the Order nodes.
  *
@@ -29,6 +31,30 @@ public class OrderList {
         tail = null;
         cursor = null;
         numOfOrders = 0;
+    }
+
+    //Accessors
+
+    /**
+     * Method that returns the head of the object
+     * @return
+     *       Head node of the list
+     * @throws EndOfListException
+     *       Indicates that the head is null
+     */
+    public OrderListNode getHead() throws EndOfListException{
+        if(head == null)
+            throw new EndOfListException("Empty List.");
+        return head;
+    }
+
+    /**
+     * Tail accessor
+     * @return
+     *      Returns the tail of the list
+     */
+    public OrderListNode getTail(){
+        return tail;
     }
 
     //Methods
@@ -223,20 +249,29 @@ public class OrderList {
 
         Order order = null;
 
-        if(cursor.getNext() == null && cursor.getPrev() == null) {
+        if(cursor.getPrev() == null){ //It's the head
+            head = cursor.getNext();
+
+            if(head!=null)
+                head.setPrev(null);
+
+            order = cursor.getData(); //get Order object in the cursor
+            cursor = head;
+        }else if(cursor.getNext() == null){ //It's the tail
+            tail = cursor.getPrev();
+            tail.setNext(null);
+
             order = cursor.getData();
-            tail=null;
-            cursor=null;
-            head = null;
-        }else {
-            if (cursor.getPrev() != null)
-                cursor.getPrev().setNext(cursor.getNext());
-            if (cursor.getNext() != null)
-                cursor.getNext().setPrev(cursor.getPrev());
+            cursor = cursor.getPrev();
+        }else{
+            cursor.getPrev().setNext(cursor.getNext());
+            cursor.getNext().setPrev(cursor.getPrev());
 
             order = cursor.getData();
             cursor = cursor.getPrev();
         }
+
+
         if(cursor != null && cursor.getNext() == null)
             tail=cursor;
 
@@ -325,6 +360,8 @@ public class OrderList {
      *      String that represents all the order's placed for the barista
      */
     public String toString(int server){
+       // if(cursor==null)
+         //   System.out.println("null cursor");
         //New OrderListNode, which is a node pointer
         OrderListNode nodePtr = head;
 
@@ -333,24 +370,31 @@ public class OrderList {
         orders += ("Barista: " + server + "\n");
         orders += String.format("%-20s%-40s%-5s\n","Order Name", "Special Instructions", "Price");
         orders += "-----------------------------------------------------------------\n";
-
-        while(nodePtr != null){
-            if(nodePtr == cursor)
-                orders += String.format("->%-18s%-40s%-5s\n", nodePtr.getData().getOrder(),
-                        nodePtr.getData().getSpecialInstruction(), nodePtr.getData().getPrice());
-            else
-            orders += String.format("%-20s%-40s%-5s\n", nodePtr.getData().getOrder(),
-                    nodePtr.getData().getSpecialInstruction(), nodePtr.getData().getPrice());
-            nodePtr=nodePtr.getNext();
+        if(head != null) {
+            while (nodePtr != null) {
+                if (nodePtr == cursor)
+                    orders += String.format("->%-18s%-40s%-5s\n", nodePtr.getData().getOrder(),
+                            nodePtr.getData().getSpecialInstruction(), nodePtr.getData().getPrice());
+                else
+                    orders += String.format("%-20s%-40s%-5s\n", nodePtr.getData().getOrder(),
+                            nodePtr.getData().getSpecialInstruction(), nodePtr.getData().getPrice());
+                nodePtr = nodePtr.getNext();
+            }
+        }else {
+            orders += "[Empty].";
         }
-
+        orders += "\n";
         return orders;
     }
 
     /**
      * This method reverses the orderList.
+     * <dt><b>Preconditions: </b></dt>
+     * <dd>The head should not be null</dd>
      * @return
      *      Reversed linked list
+     * <dt><b>Postconditions: </b></dt>
+     * <dd>Reversed list</dd>
      */
     public OrderList reverseList() throws NullPointerException{
         //Check if the list is empty
@@ -375,9 +419,10 @@ public class OrderList {
 
             reversedList.appendToTail(head.getData()); //Add reversed node to new List
         }
-
         return reversedList;
     }
+
+
 }
 
 
